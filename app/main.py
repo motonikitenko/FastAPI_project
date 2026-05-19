@@ -8,7 +8,6 @@ class User(BaseModel):
     username: str
     message: str
 
-
 @app.post("/")
 async def root(user :User):
     return user
