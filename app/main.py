@@ -1,13 +1,17 @@
 # main.py
+import uuid
+
 from fastapi import FastAPI, Request
-from pydantic import BaseModel
-from fastapi.templating import Jinja2Templates
+from app.schemas import STaskAdd, STask
+
+tasks = []
 
 app = FastAPI()
-class User(BaseModel):
-    username: str
-    message: str
 
-@app.post("/")
-async def root(user :User):
-    return user
+
+@app.post("/tasks", response_model=STask)
+async def add_task(task: STaskAdd):
+    task_dict = task.model_dump()
+    task_dict["id"] = len(tasks) + 1
+    tasks.append(task_dict)
+    return task_dict
